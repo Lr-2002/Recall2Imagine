@@ -61,6 +61,10 @@ defaults:
     minecraft: {size: [64, 64], break_speed: 100.0}
     dmc: {size: [64, 64], repeat: 2, camera: -1}
     loconav: {size: [64, 64], repeat: 2, camera: -1}
+    messenger:
+      size: [ 16, 16 ]
+      length: 64
+      vis: False
     kwargs: '{}'
 
   # Agent
@@ -233,6 +237,30 @@ popgym:
   encoder: {mlp_keys: 'observation', cnn_keys: '$^'}
   decoder: {mlp_keys: 'observation', cnn_keys: '$^'}
 
+messenger:
+
+  task: messenger
+  env.kwargs: '{}'
+  envs.amount: 8
+  run:
+    script: train
+    train_ratio: 64
+    steps: 2e8
+  rssm.deter: 1024
+  encoder.mlp_layers: 1
+  decoder.mlp_layers: 1
+  encoder.mlp_units: 512
+  decoder.mlp_units: 512
+  actor.inputs: [stoch, hidden]
+  critic.inputs: [stoch, hidden]
+  ssm.n_layers: 3
+  rssm.units: 1024
+  .*\.cnn_depth: 32
+  .*\.layers: 2
+  .*\.units: 512
+  encoder: {mlp_keys: '.*', cnn_keys: '.*'}
+  decoder: {mlp_keys: '.*', cnn_keys: '.*'}
+
 tiny:
   rssm.deter: 200
   .*\.cnn_depth: 32
@@ -282,14 +310,14 @@ multicpu:
   run:
     actor_batch: 4
   envs:
-    amount: 8
+    amount: 2
   batch_size: 12
   batch_length: 10
 
 debug:
 
   jax: {jit: True, prealloc: False, debug: True, platform: cpu}
-  envs: {restart: False, amount: 3}
+  envs: {restart: False, amount: 2}
   wrapper: {length: 100, checks: True}
   run:
     eval_every: 1000

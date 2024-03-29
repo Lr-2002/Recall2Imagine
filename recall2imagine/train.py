@@ -199,6 +199,7 @@ def make_env(config, **overrides):
       'minecraft': 'embodied.envs.minecraft:Minecraft',
       'loconav': 'embodied.envs.loconav:LocoNav',
       'pinpad': 'embodied.envs.pinpad:PinPad',
+      'messenger': 'embodied.envs.messenger:Messenger',
   }[suite]
   if isinstance(ctor, str):
     module, cls = ctor.split(':')
@@ -210,6 +211,9 @@ def make_env(config, **overrides):
     kwargs = config.env.get(suite, {})
   kwargs.update(overrides)
   env = ctor(task, **kwargs)
+
+  from embodied.envs.from_gym import FromGym
+  env = FromGym(env)
   return wrap_env(env, config)
 
 
