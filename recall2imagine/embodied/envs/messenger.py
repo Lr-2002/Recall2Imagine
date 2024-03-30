@@ -63,9 +63,11 @@ class Messenger(embodied.Env):
     self.wrappers = [
       from_gym.FromGym,
       # Pad image to multiple of 2
-      lambda e: embodied.wrappers.PadImage(e, "image", size),
+      # lambda e: embodied.wrappers.PadImage(e, "image", size),
     ]
     # self._env = from_gym.FromGym(self._env)
+
+    # self._env = embodied.wrappers.PadImage(self._env, 'image', size)
     if load_embeddings:
       fname = f"{os.path.dirname(__file__)}/data/messenger_embeds.pkl"
       with open(fname, "rb") as f:
@@ -186,10 +188,10 @@ class Messenger(embodied.Env):
       "token_embed": self.token_embeds[self.read_step],
     })
     self.reading = True
-    obs.update({
-      "log_language_info": self.manual,
-#      "log_tokens": self.tokens,
-    })
+#     obs.update({
+#       "log_language_info": self.manual,
+# #      "log_tokens": self.tokens,
+#     })
     self.read_step += 1
     obs["image"] = self._symbolic_to_multihot(obs)
     if self.vis:
@@ -206,10 +208,10 @@ class Messenger(embodied.Env):
       obs["is_read_step"] = self.reading
       obs["token"] = self.tokens[self.read_step]
       obs["token_embed"] = self.token_embeds[self.read_step]
-      obs.update({
-        "log_language_info": self.manual,
-#        "log_tokens": self.tokens,
-      })
+#       obs.update({
+#         "log_language_info": self.manual,
+# #        "log_tokens": self.tokens,
+#       })
       self.read_step += 1
       if self.read_step >= len(self.tokens):
         self.reading = False
@@ -222,10 +224,10 @@ class Messenger(embodied.Env):
     info = info or {}
     obs["token"] = self.empty_token_id
     obs["token_embed"] = self.empty_embed
-    obs.update({
-      "log_language_info": self.manual,
-#      "log_tokens": self.tokens,
-    })
+#     obs.update({
+#       "log_language_info": self.manual,
+# #      "log_tokens": self.tokens,
+#     })
     obs["image"] = self._symbolic_to_multihot(obs)
     if self.vis:
       obs["log_image"] = self.make_image(obs["image"], action, rew, done)

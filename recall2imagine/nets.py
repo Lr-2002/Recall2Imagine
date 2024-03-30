@@ -230,6 +230,7 @@ class RSSM(nj.Module):
   def _stats(self, name, x):
     if self._classes:
       x = self.get(name, Linear, self._stoch * self._classes)(x)
+      print("x's shape is ", x.shape)
       logit = x.reshape(x.shape[:-1] + (self._stoch, self._classes))
       if self._unimix:
         probs = jax.nn.softmax(logit, -1)

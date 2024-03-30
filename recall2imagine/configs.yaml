@@ -251,6 +251,7 @@ messenger:
   decoder.mlp_layers: 1
   encoder.mlp_units: 512
   decoder.mlp_units: 512
+#  size: [16,16]
   actor.inputs: [stoch, hidden]
   critic.inputs: [stoch, hidden]
   ssm.n_layers: 3

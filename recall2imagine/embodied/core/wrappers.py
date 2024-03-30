@@ -217,6 +217,32 @@ class FlattenTwoDimActions(base.Wrapper):
       action[key] = action[key].reshape(shape)
     return self.env.step(action)
 
+class PadImage(base.Wrapper):
+
+  def __init__(self, env, key, size=(16, 16)):
+    super().__init__(env)
+    self._size = size
+    self._keys = [key]
+    print(f'Resizing keys {",".join(self._keys)} to {self._size}.')
+
+  @functools.cached_property
+  def obs_space(self):
+    spaces = self.env.obs_space
+    for key in self._keys:
+      shape = self._size + spaces[key].shape[2:]
+      spaces[key] = spacelib.Space(np.uint8, shape)
+    return spaces
+
+  def step(self, action):
+    obs = self.env.step(action)
+    for key in self._keys:
+      obs[key] = self._resize(obs[key])
+    return obs
+
+  def _resize(self, image):
+    new = np.zeros((*self._size, image.shape[-1]))
+    new[:image.shape[0], :image.shape[1]] = image
+    return new
 
 class CheckSpaces(base.Wrapper):
 

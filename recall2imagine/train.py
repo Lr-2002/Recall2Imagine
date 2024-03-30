@@ -214,6 +214,7 @@ def make_env(config, **overrides):
 
   from embodied.envs.from_gym import FromGym
   env = FromGym(env)
+  env = embodied.wrappers.PadImage(env, 'image', (16,16))
   return wrap_env(env, config)
 
 
